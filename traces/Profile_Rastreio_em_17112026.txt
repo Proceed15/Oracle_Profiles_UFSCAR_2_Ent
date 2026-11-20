@@ -1,0 +1,157 @@
+
+TKPROF: Release 11.2.0.1.0 - Development on Ter Nov 17 02:14:50 2026
+
+Copyright (c) 1982, 2009, Oracle and/or its affiliates.  All rights reserved.
+
+Trace file: oracle_ora_4124_teste_rastreio.trc
+Sort options: default
+
+********************************************************************************
+count    = number of times OCI procedure was executed
+cpu      = cpu time in seconds executing 
+elapsed  = elapsed time in seconds executing
+disk     = number of physical reads of buffers from disk
+query    = number of buffers gotten for consistent read
+current  = number of buffers gotten in current mode (usually for update)
+rows     = number of rows processed by the fetch or execute call
+********************************************************************************
+
+SQL ID: g5vyat9g6zupq
+Plan Hash: 3675186089
+SELECT /* OPT_DYN_SAMP */ /*+ ALL_ROWS IGNORE_WHERE_CLAUSE 
+  NO_PARALLEL(SAMPLESUB) opt_param('parallel_execution_enabled', 'false') 
+  NO_PARALLEL_INDEX(SAMPLESUB) NO_SQL_TUNE */ NVL(SUM(C1),:"SYS_B_0"), 
+  NVL(SUM(C2),:"SYS_B_1"), COUNT(DISTINCT C3), NVL(SUM(CASE WHEN C3 IS NULL 
+  THEN :"SYS_B_2" ELSE :"SYS_B_3" END),:"SYS_B_4") 
+FROM
+ (SELECT /*+ NO_PARALLEL("EV") FULL("EV") NO_PARALLEL_INDEX("EV") */ 
+  :"SYS_B_5" AS C1, :"SYS_B_6" AS C2, "EV"."ID_ENTREGA" AS C3 FROM 
+  "EVENTOS_RASTREIO" "EV") SAMPLESUB
+
+
+call     count       cpu    elapsed       disk      query    current        rows
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+Parse        1      0.01       0.00          0          0          0           0
+Execute      1      0.00       0.00          0          0          0           0
+Fetch        1      0.00       0.00          0          7          0           1
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+total        3      0.01       0.00          0          7          0           1
+
+Misses in library cache during parse: 1
+Misses in library cache during execute: 1
+Optimizer mode: ALL_ROWS
+Parsing user id: 85     (recursive depth: 1)
+
+Rows     Row Source Operation
+-------  ---------------------------------------------------
+      1  SORT AGGREGATE (cr=7 pr=0 pw=0 time=0 us)
+      2   VIEW  VW_DAG_0 (cr=7 pr=0 pw=0 time=3 us cost=3 size=4264 card=82)
+      2    HASH GROUP BY (cr=7 pr=0 pw=0 time=3 us cost=3 size=1066 card=82)
+      6     TABLE ACCESS FULL EVENTOS_RASTREIO (cr=7 pr=0 pw=0 time=5 us cost=2 size=1066 card=82)
+
+********************************************************************************
+
+SELECT e.codigo_rastreio, e.destinatario, ev.status, ev.localizacao,
+       TO_CHAR(ev.data_hora, 'DD/MM/YYYY HH24:MI') as data_atualizacao
+FROM entregas e
+JOIN eventos_rastreio ev ON e.id_entrega = ev.id_entrega
+WHERE e.codigo_rastreio = 'BR987654321US'
+ORDER BY ev.data_hora DESC
+
+call     count       cpu    elapsed       disk      query    current        rows
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+Parse        1      0.01       0.01          0          8          0           0
+Execute      1      0.00       0.00          0          0          0           0
+Fetch        2      0.00       0.00          0          9          0           4
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+total        4      0.01       0.01          0         17          0           4
+
+Misses in library cache during parse: 1
+Optimizer mode: ALL_ROWS
+Parsing user id: 85  
+
+Rows     Row Source Operation
+-------  ---------------------------------------------------
+      4  SORT ORDER BY (cr=9 pr=0 pw=0 time=0 us cost=5 size=546 card=3)
+      4   NESTED LOOPS  (cr=9 pr=0 pw=0 time=3 us cost=4 size=546 card=3)
+      1    TABLE ACCESS BY INDEX ROWID ENTREGAS (cr=2 pr=0 pw=0 time=0 us cost=1 size=77 card=1)
+      1     INDEX UNIQUE SCAN SYS_C0011097 (cr=1 pr=0 pw=0 time=0 us cost=1 size=0 card=1)(object id 74581)
+      4    TABLE ACCESS FULL EVENTOS_RASTREIO (cr=7 pr=0 pw=0 time=3 us cost=3 size=315 card=3)
+
+
+Elapsed times include waiting on following events:
+  Event waited on                             Times   Max. Wait  Total Waited
+  ----------------------------------------   Waited  ----------  ------------
+  SQL*Net message to client                       2        0.00          0.00
+  SQL*Net message from client                     2       11.55         11.55
+********************************************************************************
+
+SQL ID: 0kjg1c2g4gdcr
+Plan Hash: 0
+ALTER SESSION SET EVENTS '10046 trace name context off'
+
+
+call     count       cpu    elapsed       disk      query    current        rows
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+Parse        1      0.00       0.00          0          0          0           0
+Execute      1      0.00       0.00          0          0          0           0
+Fetch        0      0.00       0.00          0          0          0           0
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+total        2      0.00       0.00          0          0          0           0
+
+Misses in library cache during parse: 0
+Parsing user id: 85  
+
+
+
+********************************************************************************
+
+OVERALL TOTALS FOR ALL NON-RECURSIVE STATEMENTS
+
+call     count       cpu    elapsed       disk      query    current        rows
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+Parse        2      0.01       0.01          0          8          0           0
+Execute      2      0.00       0.00          0          0          0           0
+Fetch        2      0.00       0.00          0          9          0           4
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+total        6      0.01       0.01          0         17          0           4
+
+Misses in library cache during parse: 1
+
+Elapsed times include waiting on following events:
+  Event waited on                             Times   Max. Wait  Total Waited
+  ----------------------------------------   Waited  ----------  ------------
+  SQL*Net message to client                       3        0.00          0.00
+  SQL*Net message from client                     3       19.96         31.52
+
+
+OVERALL TOTALS FOR ALL RECURSIVE STATEMENTS
+
+call     count       cpu    elapsed       disk      query    current        rows
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+Parse        1      0.01       0.00          0          0          0           0
+Execute      1      0.00       0.00          0          0          0           0
+Fetch        1      0.00       0.00          0          7          0           1
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+total        3      0.01       0.00          0          7          0           1
+
+Misses in library cache during parse: 1
+Misses in library cache during execute: 1
+
+    3  user  SQL statements in session.
+    0  internal SQL statements in session.
+    3  SQL statements in session.
+********************************************************************************
+Trace file: oracle_ora_4124_teste_rastreio.trc
+Trace file compatibility: 11.1.0.7
+Sort options: default
+
+       1  session in tracefile.
+       3  user  SQL statements in trace file.
+       0  internal SQL statements in trace file.
+       3  SQL statements in trace file.
+       3  unique SQL statements in trace file.
+     104  lines in trace file.
+      11  elapsed seconds in trace file.
+
+
