@@ -1,0 +1,434 @@
+Microsoft Windows [versão 10.0.26200.9974]
+(c) Microsoft Corporation. Todos os direitos reservados.
+
+C:\Windows\System32>emctl stop dbconsole
+Environment variable ORACLE_UNQNAME not defined. Please set ORACLE_UNQNAME to database unique name.
+
+C:\Windows\System32>sqlplus / as sysdba
+
+SQL*Plus: Release 11.2.0.1.0 Production on Ter Nov 17 01:00:19 2026
+
+Copyright (c) 1982, 2010, Oracle.  All rights reserved.
+
+ERROR:
+ORA-01031: insufficient privileges
+
+
+Informe o nome do usußrio: sysdba
+Informe a senha:
+ERROR:
+ORA-01017: invalid username/password; logon denied
+
+
+Informe o nome do usußrio: sysdba
+Informe a senha:
+ERROR:
+ORA-01017: invalid username/password; logon denied
+
+
+SP2-0157: ConexÒo ao ORACLE impossÝvel ap¾s 3 tentativas, saindo SQL*Plus
+
+C:\Windows\System32>sqlplus / as sysdba
+
+SQL*Plus: Release 11.2.0.1.0 Production on Ter Nov 17 01:01:19 2026
+
+Copyright (c) 1982, 2010, Oracle.  All rights reserved.
+
+ERROR:
+ORA-01031: insufficient privileges
+
+
+Informe o nome do usußrio: a
+Informe a senha:
+ERROR:
+ORA-01017: invalid username/password; logon denied
+
+
+Informe o nome do usußrio: a
+Informe a senha:
+ERROR:
+ORA-01017: invalid username/password; logon denied
+
+
+SP2-0157: ConexÒo ao ORACLE impossÝvel ap¾s 3 tentativas, saindo SQL*Plus
+
+C:\Windows\System32>sqlplus sys/SenhaBancoOracle as sysdba
+
+SQL*Plus: Release 11.2.0.1.0 Production on Ter Nov 17 01:04:45 2026
+
+Copyright (c) 1982, 2010, Oracle.  All rights reserved.
+
+
+Conectado a:
+Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+
+SQL> sqlplus / as sysdba
+SP2-0734: inÝcio de comando desconhecido "sqlplus / ..." - restante da linha ignorado.
+SQL> STARTUP;
+ORA-01081: nÒo Ú possÝvel iniciar o ORACLE quando este jß estiver em execuþÒo -- dÛ uma interrupþÒo primeiro
+SQL> SELECT instance_name, status FROM v$instance;
+
+INSTANCE_NAME    STATUS
+---------------- ------------
+oracle           OPEN
+
+SQL> CONNECT hr/SenhaBancoOracle;
+ERROR:
+ORA-28000: the account is locked
+
+
+AdvertÛncia: VocÛ nÒo estß mais conectado ao ORACLE.
+SQL> CONNECT / AS SYSDBA
+ERROR:
+ORA-01031: insufficient privileges
+
+
+SQL> sqlplus sys/SenhaBancoOracle as sysdba
+SP2-0734: inÝcio de comando desconhecido "sqlplus sy..." - restante da linha ignorado.
+SQL> Connect sys/SenhaBancoOracle as sysdba
+Conectado.
+SQL> ALTER USER hr IDENTIFIED BY SenhaBancoOracle ACCOUNT UNLOCK;
+
+Usußrio alterado.
+
+SQL> Grant DBA to hr
+  2
+SQL> GRANT DBA TO hr
+  2
+SQL> CONNECT hr/SenhaBancoOracle
+Conectado.
+SQL> CREATE TABLE entregas (    id_entrega NUMBER PRIMARY KEY,    codigo_rastreio VARCHAR2(20) UNIQUE NOT NULL,    remetente VARCHAR2(100),    destinatario VARCHAR2(100),    data_postagem DATE DEFAULT SYSDATE);
+
+Tabela criada.
+
+SQL> CREATE TABLE eventos_rastreio (
+  2      id_evento NUMBER PRIMARY KEY,
+  3      id_entrega NUMBER,
+  4      status VARCHAR2(50) NOT NULL,
+  5      localizacao VARCHAR2(100),
+  6      data_hora TIMESTAMP DEFAULT SYSTIMESTAMP,
+  7      CONSTRAINT fk_entrega FOREIGN KEY (id_entrega) REFERENCES entregas(id_entrega)
+  8  );
+
+Tabela criada.
+
+SQL> INSERT INTO entregas (id_entrega, codigo_rastreio, remetente, destinatario)
+  2  VALUES (1, 'BR123456789BR', 'Loja Central', 'José Roberto');
+
+1 linha criada.
+
+SQL>
+SQL> INSERT INTO eventos_rastreio (id_evento, id_entrega, status, localizacao)
+  2  VALUES (1, 1, 'Postado', 'Agência Sorocaba');
+
+1 linha criada.
+
+SQL>
+SQL> INSERT INTO eventos_rastreio (id_evento, id_entrega, status, localizacao)
+  2  VALUES (2, 1, 'Em Trânsito', 'Centro de Distribuição SP');
+
+1 linha criada.
+
+SQL>
+SQL> COMMIT;
+
+Commit concluÝdo.
+
+SQL> SELECT e.codigo_rastreio, e.destinatario, ev.status, ev.localizacao, ev.data_hora
+  2  FROM entregas e
+  3  JOIN eventos_rastreio ev ON e.id_entrega = ev.id_entrega
+  4  WHERE e.codigo_rastreio = 'BR123456789BR'
+  5  ORDER BY ev.data_hora DESC;
+
+CODIGO_RASTREIO
+--------------------
+DESTINATARIO
+--------------------------------------------------------------------------------
+STATUS
+--------------------------------------------------
+LOCALIZACAO
+--------------------------------------------------------------------------------
+DATA_HORA
+---------------------------------------------------------------------------
+BR123456789BR
+José Roberto
+Em Trânsito
+
+CODIGO_RASTREIO
+--------------------
+DESTINATARIO
+--------------------------------------------------------------------------------
+STATUS
+--------------------------------------------------
+LOCALIZACAO
+--------------------------------------------------------------------------------
+DATA_HORA
+---------------------------------------------------------------------------
+Centro de Distribuição SP
+17/11/26 01:34:36,069000
+
+
+CODIGO_RASTREIO
+--------------------
+DESTINATARIO
+--------------------------------------------------------------------------------
+STATUS
+--------------------------------------------------
+LOCALIZACAO
+--------------------------------------------------------------------------------
+DATA_HORA
+---------------------------------------------------------------------------
+BR123456789BR
+José Roberto
+Postado
+
+CODIGO_RASTREIO
+--------------------
+DESTINATARIO
+--------------------------------------------------------------------------------
+STATUS
+--------------------------------------------------
+LOCALIZACAO
+--------------------------------------------------------------------------------
+DATA_HORA
+---------------------------------------------------------------------------
+Agência Sorocaba
+17/11/26 01:34:36,065000
+
+
+SQL> INSERT INTO entregas (id_entrega, codigo_rastreio, remetente, destinatario)
+  2  VALUES (2, 'BR987654321US', 'José Roberto', 'Filial California, USA');
+
+1 linha criada.
+
+SQL> INSERT INTO eventos_rastreio (id_evento, id_entrega, status, localizacao)
+  2  VALUES (3, 2, 'Postado (Envio Internacional)', 'Agência Central - Sorocaba');
+
+1 linha criada.
+
+SQL>
+SQL> COMMIT;
+
+Commit concluÝdo.
+
+SQL> SELECT e.codigo_rastreio, e.remetente, e.destinatario, ev.status, ev.localizacao,
+  2         TO_CHAR(ev.data_hora, 'DD/MM/YYYY HH24:MI') as data_atualizacao
+  3  FROM entregas e
+  4  JOIN eventos_rastreio ev ON e.id_entrega = ev.id_entrega
+  5  WHERE e.codigo_rastreio = 'BR987654321US'
+  6  ORDER BY ev.data_hora DESC;
+
+CODIGO_RASTREIO
+--------------------
+REMETENTE
+--------------------------------------------------------------------------------
+DESTINATARIO
+--------------------------------------------------------------------------------
+STATUS
+--------------------------------------------------
+LOCALIZACAO
+--------------------------------------------------------------------------------
+DATA_ATUALIZACAO
+----------------
+BR987654321US
+
+CODIGO_RASTREIO
+--------------------
+REMETENTE
+--------------------------------------------------------------------------------
+DESTINATARIO
+--------------------------------------------------------------------------------
+STATUS
+--------------------------------------------------
+LOCALIZACAO
+--------------------------------------------------------------------------------
+DATA_ATUALIZACAO
+----------------
+José Roberto
+
+CODIGO_RASTREIO
+--------------------
+REMETENTE
+--------------------------------------------------------------------------------
+DESTINATARIO
+--------------------------------------------------------------------------------
+STATUS
+--------------------------------------------------
+LOCALIZACAO
+--------------------------------------------------------------------------------
+DATA_ATUALIZACAO
+----------------
+Filial California, USA
+
+CODIGO_RASTREIO
+--------------------
+REMETENTE
+--------------------------------------------------------------------------------
+DESTINATARIO
+--------------------------------------------------------------------------------
+STATUS
+--------------------------------------------------
+LOCALIZACAO
+--------------------------------------------------------------------------------
+DATA_ATUALIZACAO
+----------------
+Postado (Envio Internacional)
+
+CODIGO_RASTREIO
+--------------------
+REMETENTE
+--------------------------------------------------------------------------------
+DESTINATARIO
+--------------------------------------------------------------------------------
+STATUS
+--------------------------------------------------
+LOCALIZACAO
+--------------------------------------------------------------------------------
+DATA_ATUALIZACAO
+----------------
+Agência Central - Sorocaba
+
+CODIGO_RASTREIO
+--------------------
+REMETENTE
+--------------------------------------------------------------------------------
+DESTINATARIO
+--------------------------------------------------------------------------------
+STATUS
+--------------------------------------------------
+LOCALIZACAO
+--------------------------------------------------------------------------------
+DATA_ATUALIZACAO
+----------------
+17/11/2026 01:41
+
+CODIGO_RASTREIO
+--------------------
+REMETENTE
+--------------------------------------------------------------------------------
+DESTINATARIO
+--------------------------------------------------------------------------------
+STATUS
+--------------------------------------------------
+LOCALIZACAO
+--------------------------------------------------------------------------------
+DATA_ATUALIZACAO
+----------------
+
+
+SQL> SET LINESIZE 200;
+SQL> SET PAGESIZE 100;
+SQL> COLUMN codigo_rastreio FORMAT A15;
+SQL> COLUMN remetente FORMAT A15;
+SQL> COLUMN destinatario FORMAT A25;
+SQL> COLUMN status FORMAT A30;
+SQL> COLUMN localizacao FORMAT A30;
+SQL> COLUMN data_atualizacao FORMAT A16;
+SQL> SELECT e.codigo_rastreio, e.remetente, e.destinatario, ev.status, ev.localizacao,
+  2         TO_CHAR(ev.data_hora, 'DD/MM/YYYY HH24:MI') as data_atualizacao
+  3  FROM entregas e
+  4  JOIN eventos_rastreio ev ON e.id_entrega = ev.id_entrega
+  5  WHERE e.codigo_rastreio = 'BR987654321US'
+  6  ORDER BY ev.data_hora DESC;
+
+CODIGO_RASTREIO REMETENTE       DESTINATARIO              STATUS                       LOCALIZACAO                    DATA_ATUALIZACAO
+--------------- --------------- ------------------------- ------------------------------ ------------------------------ ----------------
+BR987654321US   José Roberto    Filial California, USA    Postado (Envio Internacional)  Agência Central - Sorocaba   17/11/2026 01:41
+
+SQL> INSERT INTO eventos_rastreio (id_evento, id_entrega, status, localizacao)
+  2  VALUES (4, 2, 'Chegado ao Aeroporto', 'Aeroporto de Guarulhos - SP');
+
+1 linha criada.
+
+SQL>
+SQL> INSERT INTO eventos_rastreio (id_evento, id_entrega, status, localizacao)
+  2  VALUES (5, 2, 'Liberado na Alfândega', 'Alfândega Americana - CA');
+
+1 linha criada.
+
+SQL>
+SQL> INSERT INTO eventos_rastreio (id_evento, id_entrega, status, localizacao)
+  2  VALUES (6, 2, 'Entregue ao Destinatário', 'Filial California, USA');
+
+1 linha criada.
+
+SQL>
+SQL> COMMIT;
+
+Commit concluÝdo.
+
+SQL> SELECT e.codigo_rastreio, e.destinatario, ev.status, ev.localizacao,
+  2         TO_CHAR(ev.data_hora, 'DD/MM/YYYY HH24:MI') as data_atualizacao
+  3  FROM entregas e
+  4  JOIN eventos_rastreio ev ON e.id_entrega = ev.id_entrega
+  5  WHERE e.codigo_rastreio = 'BR987654321US'
+  6  ORDER BY ev.data_hora DESC;
+
+CODIGO_RASTREIO DESTINATARIO              STATUS                         LOCALIZACAO                  DATA_ATUALIZACAO
+--------------- ------------------------- ------------------------------ ------------------------------ ----------------
+BR987654321US   Filial California, USA    Entregue ao Destinatário       Filial California, USA       17/11/2026 01:47
+BR987654321US   Filial California, USA    Liberado na Alfândega          Alfândega Americana - CA     17/11/2026 01:47
+BR987654321US   Filial California, USA    Chegado ao Aeroporto           Aeroporto de Guarulhos - SP  17/11/2026 01:47
+BR987654321US   Filial California, USA    Postado (Envio Internacional)  Agência Central - Sorocaba   17/11/2026 01:41
+
+SQL> ALTER SESSION SET tracefile_identifier = 'teste_rastreio';
+
+SessÒo alterada.
+
+SQL> ALTER SESSION SET EVENTS '10046 trace name context forever, level 12';
+
+SessÒo alterada.
+
+SQL> SELECT e.codigo_rastreio, e.destinatario, ev.status, ev.localizacao,
+  2         TO_CHAR(ev.data_hora, 'DD/MM/YYYY HH24:MI') as data_atualizacao
+  3  FROM entregas e
+  4  JOIN eventos_rastreio ev ON e.id_entrega = ev.id_entrega
+  5  WHERE e.codigo_rastreio = 'BR987654321US'
+  6  ORDER BY ev.data_hora DESC;
+
+CODIGO_RASTREIO DESTINATARIO              STATUS                         LOCALIZACAO                  DATA_ATUALIZACAO
+--------------- ------------------------- ------------------------------ ------------------------------ ----------------
+BR987654321US   Filial California, USA    Entregue ao Destinatário       Filial California, USA       17/11/2026 01:47
+BR987654321US   Filial California, USA    Liberado na Alfândega          Alfândega Americana - CA     17/11/2026 01:47
+BR987654321US   Filial California, USA    Chegado ao Aeroporto           Aeroporto de Guarulhos - SP  17/11/2026 01:47
+BR987654321US   Filial California, USA    Postado (Envio Internacional)  Agência Central - Sorocaba   17/11/2026 01:41
+
+SQL> ALTER SESSION SET EVENTS '10046 trace name context off';
+
+SessÒo alterada.
+
+SQL> SELECT value FROM v$diag_info WHERE name = 'Default Trace File';
+
+VALUE
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+c:\oracle\diag\rdbms\oracle\oracle\trace\oracle_ora_4124_teste_rastreio.trc
+
+SQL> cd c:\oracle\diag\rdbms\oracle\oracle\trace\oracle_ora_4124_teste_rastreio.trc
+SP2-0734: inÝcio de comando desconhecido "cd c:\orac..." - restante da linha ignorado.
+SQL> SHUTDOWN IMMEDIATE;
+ORA-01031: privilÚgios insuficientes
+SQL> EXIT
+Desconectado de Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+
+C:\Windows\System32>sqlplus sys/SenhaBancoOracle as sysdba
+
+SQL*Plus: Release 11.2.0.1.0 Production on Ter Nov 17 02:18:46 2026
+
+Copyright (c) 1982, 2010, Oracle.  All rights reserved.
+
+
+Conectado a:
+Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+
+SQL> SHUTDOWN IMMEDIATE;
+Banco de dados fechado.
+Banco de dados desmontado.
+InstÔncia ORACLE desativada.
+SQL> EXIT
+Desconectado de Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+
+C:\Windows\System32>

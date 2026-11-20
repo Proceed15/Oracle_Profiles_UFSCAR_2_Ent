@@ -1,0 +1,45 @@
+Microsoft Windows [versão 10.0.26200.9974]
+(c) Microsoft Corporation. Todos os direitos reservados.
+
+C:\Windows\System32>cd c:\oracle\diag\rdbms\oracle\oracle\trace\oracle_ora_4124_teste_rastreio.trc
+O nome do diretório é inválido.
+
+C:\Windows\System32>cd ..
+
+C:\Windows>cd ..
+
+C:\>cd c:\oracle\diag\rdbms\oracle\oracle\trace\oracle_ora_4124_teste_rastreio.trc
+O nome do diretório é inválido.
+
+C:\>cd oracle\diag\rdbms\oracle\oracle\trace\oracle_ora_4124_teste_rastreio.trc
+O nome do diretório é inválido.
+
+C:\>cd oracle\diag\rdbms\oracle\oracle\trace\
+
+C:\oracle\diag\rdbms\oracle\oracle\trace>tkprof oracle_ora_4124_teste_rastreio.trc Profile_Rastreio_em_17112026.txt
+
+TKPROF: Release 11.2.0.1.0 - Development on Ter Nov 17 02:14:50 2026
+
+Copyright (c) 1982, 2009, Oracle and/or its affiliates.  All rights reserved.
+
+
+
+C:\oracle\diag\rdbms\oracle\oracle\trace>cd ..
+
+C:\oracle\diag\rdbms\oracle\oracle>cd ..
+
+C:\oracle\diag\rdbms\oracle>cd ..
+
+C:\oracle\diag\rdbms>cd ..
+
+C:\oracle\diag>cd ..
+
+C:\oracle>cd ..
+
+C:\>cd oracle
+
+C:\oracle>cd ..
+
+C:\>cd apps
+
+C:\Apps>
