@@ -1,0 +1,5 @@
+C:\Windows\System32>tkprof c:\oracle\diag\rdbms\oracle\oracle\trace\oracle_ora_1000_Consulta_limpa.trc c:\oracle\diag\rdbms\oracle\oracle\trace\Profile_Em_20112026.txt sys=no waits=yes sort=prsela,exeela,fchela
+
+TKPROF: Release 11.2.0.1.0 - Development on Sex Nov 20 22:03:47 2026
+
+Copyright (c) 1982, 2009, Oracle and/or its affiliates.  All rights reserved.

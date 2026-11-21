@@ -1,0 +1,200 @@
+Comandos Executados:
+
+C:\Windows\System32>sqlplus sys/SenhaBancoOracle as sysdba
+
+SQL*Plus: Release 11.2.0.1.0 Production on Sex Nov 20 21:14:00 2026
+
+Copyright (c) 1982, 2010, Oracle.  All rights reserved.
+
+Conectado a uma instÔncia inativa.
+
+SQL> EXEC DBMS_STATS.gather_table_stats('HR', 'ENTREGAS');
+BEGIN DBMS_STATS.gather_table_stats('HR', 'ENTREGAS'); END;
+
+*
+ERRO na linha 1:
+ORA-01034: ORACLE not available
+ID do Processo: 0
+ID da SessÒo: 0 N·mero de sÚrie: 0
+
+
+SQL> Connect sys/SenhaBancoOracle as sysdba
+Conectado a uma instÔncia inativa.
+SQL> ALTER USER hr IDENTIFIED BY SenhaBancoOracle ACCOUNT UNLOCK;
+ALTER USER hr IDENTIFIED BY SenhaBancoOracle ACCOUNT UNLOCK
+*
+ERRO na linha 1:
+ORA-01034: ORACLE not available
+ID do Processo: 0
+ID da SessÒo: 0 N·mero de sÚrie: 0
+
+
+SQL> STARTUP;
+InstÔncia ORACLE iniciada.
+
+Total System Global Area 6714322944 bytes
+Fixed Size                  2188448 bytes
+Variable Size            3489663840 bytes
+Database Buffers         3204448256 bytes
+Redo Buffers               18022400 bytes
+Banco de dados montado.
+Banco de dados aberto.
+SQL> Connect sys/SenhaBancoOracle as sysdba
+Conectado.
+SQL> ALTER USER hr IDENTIFIED BY SenhaBancoOracle ACCOUNT UNLOCK
+  2
+SQL> GRANT DBA TO hr
+  2
+SQL> CONNECT hr/SenhaBancoOracle
+Conectado.
+SQL> EXEC DBMS_STATS.gather_table_stats('HR', 'ENTREGAS');
+
+Procedimento PL/SQL concluÝdo com sucesso.
+
+SQL> EXEC DBMS_STATS.gather_table_stats('HR', 'EVENTOS_RASTREIO');
+
+Procedimento PL/SQL concluÝdo com sucesso.
+
+SQL> ALTER SESSION SET tracefile_identifier = 'Consulta_limpa';
+
+SessÒo alterada.
+
+SQL> ALTER SESSION SET EVENTS '10046 trace name context forever, level 12';
+
+SessÒo alterada.
+
+SQL> SELECT e.codigo_rastreio, e.destinatario, ev.status, ev.localizacao, TO_CHAR(ev.data_hora, 'DD/MM/YYYY HH24:MI') as data_atualizacao FROM entregas e JOIN eventos_rastreio ev ON e.id_entrega = ev.id_entrega WHERE e.codigo_rastreio = 'BR987654321US' ORDER BY ev.data_hora DESC;
+
+CODIGO_RASTREIO
+--------------------
+DESTINATARIO
+--------------------------------------------------------------------------------
+STATUS
+--------------------------------------------------
+LOCALIZACAO
+--------------------------------------------------------------------------------
+DATA_ATUALIZACAO
+----------------
+BR987654321US
+Filial California, USA
+Entregue ao Destinatário
+
+CODIGO_RASTREIO
+--------------------
+DESTINATARIO
+--------------------------------------------------------------------------------
+STATUS
+--------------------------------------------------
+LOCALIZACAO
+--------------------------------------------------------------------------------
+DATA_ATUALIZACAO
+----------------
+Filial California, USA
+17/11/2026 01:47
+
+
+CODIGO_RASTREIO
+--------------------
+DESTINATARIO
+--------------------------------------------------------------------------------
+STATUS
+--------------------------------------------------
+LOCALIZACAO
+--------------------------------------------------------------------------------
+DATA_ATUALIZACAO
+----------------
+BR987654321US
+Filial California, USA
+Liberado na Alfândega
+
+CODIGO_RASTREIO
+--------------------
+DESTINATARIO
+--------------------------------------------------------------------------------
+STATUS
+--------------------------------------------------
+LOCALIZACAO
+--------------------------------------------------------------------------------
+DATA_ATUALIZACAO
+----------------
+Alfândega Americana - CA
+17/11/2026 01:47
+
+
+CODIGO_RASTREIO
+--------------------
+DESTINATARIO
+--------------------------------------------------------------------------------
+STATUS
+--------------------------------------------------
+LOCALIZACAO
+--------------------------------------------------------------------------------
+DATA_ATUALIZACAO
+----------------
+BR987654321US
+Filial California, USA
+Chegado ao Aeroporto
+
+CODIGO_RASTREIO
+--------------------
+DESTINATARIO
+--------------------------------------------------------------------------------
+STATUS
+--------------------------------------------------
+LOCALIZACAO
+--------------------------------------------------------------------------------
+DATA_ATUALIZACAO
+----------------
+Aeroporto de Guarulhos - SP
+17/11/2026 01:47
+
+
+CODIGO_RASTREIO
+--------------------
+DESTINATARIO
+--------------------------------------------------------------------------------
+STATUS
+--------------------------------------------------
+LOCALIZACAO
+--------------------------------------------------------------------------------
+DATA_ATUALIZACAO
+----------------
+BR987654321US
+Filial California, USA
+Postado (Envio Internacional)
+
+CODIGO_RASTREIO
+--------------------
+DESTINATARIO
+--------------------------------------------------------------------------------
+STATUS
+--------------------------------------------------
+LOCALIZACAO
+--------------------------------------------------------------------------------
+DATA_ATUALIZACAO
+----------------
+Agência Central - Sorocaba
+17/11/2026 01:41
+
+
+SQL> ALTER SESSION SET EVENTS '10046 trace name context off';
+
+SessÒo alterada.
+
+SQL> SELECT value FROM v$diag_info WHERE name = 'Default Trace File';
+
+VALUE
+--------------------------------------------------------------------------------
+c:\oracle\diag\rdbms\oracle\oracle\trace\oracle_ora_1000_Consulta_limpa.trc
+
+SQL> tkprof "c:\oracle\diag\rdbms\oracle\oracle\trace\oracle_ora_1000_Consulta_limpa.trc" "Profile_Em_20112026.txt" sys=no waits=yes sort=prsela,exeela,fchela
+SP2-0734: inÝcio de comando desconhecido "tkprof "c:..." - restante da linha ignorado.
+
+SQL> SHUTDOWN IMMEDIATE;
+Banco de dados fechado.
+Banco de dados desmontado.
+InstÔncia ORACLE desativada.
+
+SQL> EXIT
+Desconectado de Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options

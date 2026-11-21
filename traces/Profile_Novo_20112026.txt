@@ -1,0 +1,121 @@
+
+TKPROF: Release 11.2.0.1.0 - Development on Sex Nov 20 22:03:47 2026
+
+Copyright (c) 1982, 2009, Oracle and/or its affiliates.  All rights reserved.
+
+Trace file: c:\oracle\diag\rdbms\oracle\oracle\trace\oracle_ora_1000_Consulta_limpa.trc
+Sort options: prsela  exeela  fchela  
+********************************************************************************
+count    = number of times OCI procedure was executed
+cpu      = cpu time in seconds executing 
+elapsed  = elapsed time in seconds executing
+disk     = number of physical reads of buffers from disk
+query    = number of buffers gotten for consistent read
+current  = number of buffers gotten in current mode (usually for update)
+rows     = number of rows processed by the fetch or execute call
+********************************************************************************
+
+SQL ID: fzvdq53dd2bnu
+Plan Hash: 1138978003
+SELECT e.codigo_rastreio, e.destinatario, ev.status, ev.localizacao, 
+  TO_CHAR(ev.data_hora, 'DD/MM/YYYY HH24:MI') as data_atualizacao 
+FROM
+ entregas e JOIN eventos_rastreio ev ON e.id_entrega = ev.id_entrega WHERE 
+  e.codigo_rastreio = 'BR987654321US' ORDER BY ev.data_hora DESC
+
+
+call     count       cpu    elapsed       disk      query    current        rows
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+Parse        1      0.00       0.00          0          0          0           0
+Execute      1      0.00       0.00          0          0          0           0
+Fetch        2      0.00       0.00          0          9          0           4
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+total        4      0.00       0.00          0          9          0           4
+
+Misses in library cache during parse: 1
+Optimizer mode: ALL_ROWS
+Parsing user id: 85  
+
+Rows     Row Source Operation
+-------  ---------------------------------------------------
+      4  SORT ORDER BY (cr=9 pr=0 pw=0 time=0 us cost=5 size=282 card=3)
+      4   NESTED LOOPS  (cr=9 pr=0 pw=0 time=3 us cost=4 size=282 card=3)
+      1    TABLE ACCESS BY INDEX ROWID ENTREGAS (cr=2 pr=0 pw=0 time=0 us cost=1 size=35 card=1)
+      1     INDEX UNIQUE SCAN SYS_C0011097 (cr=1 pr=0 pw=0 time=0 us cost=0 size=0 card=1)(object id 74581)
+      4    TABLE ACCESS FULL EVENTOS_RASTREIO (cr=7 pr=0 pw=0 time=3 us cost=3 size=177 card=3)
+
+
+Elapsed times include waiting on following events:
+  Event waited on                             Times   Max. Wait  Total Waited
+  ----------------------------------------   Waited  ----------  ------------
+  SQL*Net message to client                       2        0.00          0.00
+  SQL*Net message from client                     2       84.35         84.35
+********************************************************************************
+
+SQL ID: 0kjg1c2g4gdcr
+Plan Hash: 0
+ALTER SESSION SET EVENTS '10046 trace name context off'
+
+
+call     count       cpu    elapsed       disk      query    current        rows
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+Parse        1      0.00       0.00          0          0          0           0
+Execute      1      0.00       0.00          0          0          0           0
+Fetch        0      0.00       0.00          0          0          0           0
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+total        2      0.00       0.00          0          0          0           0
+
+Misses in library cache during parse: 0
+Parsing user id: 85  
+
+
+
+********************************************************************************
+
+OVERALL TOTALS FOR ALL NON-RECURSIVE STATEMENTS
+
+call     count       cpu    elapsed       disk      query    current        rows
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+Parse        2      0.00       0.00          0          0          0           0
+Execute      2      0.00       0.00          0          0          0           0
+Fetch        2      0.00       0.00          0          9          0           4
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+total        6      0.00       0.00          0          9          0           4
+
+Misses in library cache during parse: 1
+
+Elapsed times include waiting on following events:
+  Event waited on                             Times   Max. Wait  Total Waited
+  ----------------------------------------   Waited  ----------  ------------
+  SQL*Net message to client                       3        0.00          0.00
+  SQL*Net message from client                     3      302.99        387.35
+
+
+OVERALL TOTALS FOR ALL RECURSIVE STATEMENTS
+
+call     count       cpu    elapsed       disk      query    current        rows
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+Parse        0      0.00       0.00          0          0          0           0
+Execute      0      0.00       0.00          0          0          0           0
+Fetch        0      0.00       0.00          0          0          0           0
+------- ------  -------- ---------- ---------- ---------- ----------  ----------
+total        0      0.00       0.00          0          0          0           0
+
+Misses in library cache during parse: 0
+
+    2  user  SQL statements in session.
+    0  internal SQL statements in session.
+    2  SQL statements in session.
+********************************************************************************
+Trace file: c:\oracle\diag\rdbms\oracle\oracle\trace\oracle_ora_1000_Consulta_limpa.trc
+Trace file compatibility: 11.1.0.7
+Sort options: prsela  exeela  fchela  
+       1  session in tracefile.
+       2  user  SQL statements in trace file.
+       0  internal SQL statements in trace file.
+       2  SQL statements in trace file.
+       2  unique SQL statements in trace file.
+      51  lines in trace file.
+      84  elapsed seconds in trace file.
+
+
