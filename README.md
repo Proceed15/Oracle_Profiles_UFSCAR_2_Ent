@@ -271,10 +271,10 @@ tkprof oracle_ora_1000_Consulta_limpa.trc Profile_Limpo_20112026.txt sys=no wait
 
 ---
 
-## 8. Conclusoes e Proximos Passos (Cenario 2)
+## 8. Conclusões e Proximos Passos (Cenario 2)
 
 O refinamento experimental demonstrou que a eliminacao de ruídos internos no SGBD e requisito fundamental para a validade de perfis de desempenho:
 
-1. **Determinismo nas Metricas:** Sem amostragem dinamica, cada fracao de tempo e cada buffer contabilizado refletem exatamente o custo da logica de negocio.
+1. **Determinismo nas Métricas:** Sem amostragem dinamica, cada fracao de tempo e cada buffer contabilizado refletem exatamente o custo da logica de negocio.
 2. **Impacto da Modelagem:** O uso de indice unico na chave de busca e integridade referencial viabilizou um plano de execucao estavel com apenas 9 leituras em memoria para recuperar a cadeia de eventos.
-3. **Avanco para a Fase 2:** Com a linha de base limpa homologada, o proximo estagio do projeto consiste na construcao de um experimento com loop de repeticoes uniformes utilizando variaveis de ligacao (*bind variables*), permitindo avaliar a distribuicao estatistica da latencia, dispersao temporal e percentis de tempo de resposta conforme formulado na segunda parte do trabalho de Cary Millsap.
+3. **Avanço para a Fase 2:** Com a linha de base limpa homologada, o proximo estagio do projeto consiste na construcao de um experimento com loop de repeticoes uniformes utilizando variaveis de ligacao (*bind variables*), permitindo avaliar a distribuicao estatistica da latencia, dispersao temporal e percentis de tempo de resposta conforme formulado na segunda parte do trabalho de Cary Millsap.
